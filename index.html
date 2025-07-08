@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Carolyn's Super Website</title>
+        <style>
+            body {
+                background: rgb(125, 198, 205);
+                background-image: url(https://cdn.xl.thumbs.canstockphoto.com/digital-green-background-abstract-digital-green-background-technology-concept-3d-rendering-stock-illustration_csp51941089.jpg);
+                color: #278168;
+                padding: 10px;
+                font-family: arial;
+            }    
+            header {
+                font-size: 1.5em;
+                font-weight: bold;
+            }
+            #all-contents {
+                max-width: 800px;
+                margin: auto;
+            }
+    
+            /* navigation menu */
+            nav {
+                background: #003426;
+                margin: 0 auto;
+                margin-bottom: 20px;
+                display: flex;
+                padding: 5px;
+            }
+            nav header {
+                display: flex;
+                align-items: center;
+                color: rgb(255, 255, 255);
+                flex: 1;
+            }
+            nav:hover {
+                opacity:.8;
+            }
+            nav ul {
+                list-style-image: none;
+            }
+            nav li {
+                display: inline-block;
+                padding: 0 10px;
+                border: 5px solid #00CD94;
+                border-radius: 5px;
+                background-color: #00CD94;
+               
+            }
+            li a:hover:not(.active) {
+                background-color: #003426;
+                color: white;
+            }
+            nav a {
+                text-decoration: none;
+                color: #003426;
+            }
+           
+    
+            /* main container area beneath menu */
+            main {
+                background: #003426;
+                display: flex;
+            }
+            .sidebar {
+                margin-right: 25px;
+                padding: 10px;
+                background: #00CD94;
+            }
+            .sidebar img {
+                width: 200px;
+            }
+            .content {
+                flex: 1;
+                padding: 15px;
+            }
+            .interests header {
+                font-size: 1.25em;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="all-contents">
+            <nav>
+               <ul>
+                   <li><a href="index.html">Home</a></li>
+                   <li><a href="portfolio.html">Portfolio</a></li>
+               </ul> 
+            </nav>
+            <main>
+                <div class="sidebar">
+                    <img src="https://www.gochoctaws.com/images/2013/10/28//Harris,-Carolyn.jpg?width=300">
+                </div>
+                <div class="content">
+                    <header>Carolyn Harris</header>
+                    <p>Teacher at Madison High/Middle School</p>
+                    <section class="interests">
+                        <header>Interests</header>
+                        <ul>
+                            <li>Spending time with family and friends</li>
+                            <li>Eating</li>
+                            <li>Sports</li>
+                            <li>Coding and Solving Problems</li>
+                        </ul>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
