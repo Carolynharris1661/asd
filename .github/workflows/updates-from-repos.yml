@@ -1,0 +1,105 @@
+name: Updates from Repos
+on:
+  repository_dispatch:
+    types:
+      [
+        update-asd-data-shapes,
+        update-asd-debugging-exercise,
+        update-snake-fsd,
+        update-asd-walker,
+        update-asd-image-filtering,
+        update-asd-sorting,
+        update-asd-pong,
+      ]
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo A
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+
+      - name: Fetch changes and update
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          set -x  # Enable command tracing
+
+          echo "::debug:: This is how you can print debug messages in the log; you can also enable debug logging in the repo action secrets"
+
+          REPO_NAME="${{ github.event.client_payload.repo }}"
+          EVENT_TYPE="${{ github.event.action }}"
+
+          echo "Processing event for $REPO_NAME with event type $EVENT_TYPE"
+
+          case $EVENT_TYPE in
+            update-asd-data-shapes)
+              TARGET_DIR="asd-projects/data-shapes"
+              README_NAME="data-shapes.md"
+              ;;
+            update-asd-debugging-exercise)
+              TARGET_DIR="asd-projects/debugging-exercise"
+              README_NAME="debugging-exercise.md"
+              ;;
+            update-snake-fsd)
+              echo "action name is 'snake-fsd' but we're just calling it 'snake' in the asd template"
+              TARGET_DIR="asd-projects/snake"
+              README_NAME="snake.md"
+              ;;
+            update-asd-walker)
+              TARGET_DIR="asd-projects/walker"
+              README_NAME="walker.md"
+              ;;
+            update-asd-image-filtering)
+              TARGET_DIR="asd-projects/image-filtering"
+              README_NAME="image-filtering.md"
+              ;;
+            update-asd-sorting)
+              TARGET_DIR="asd-projects/sorting"
+              README_NAME="sorting.md"
+              ;;
+            update-asd-pong)
+              TARGET_DIR="asd-projects/pong"
+              README_NAME="pong.md"
+              ;;
+          esac
+
+          if [ -n "$TARGET_DIR" ]; then
+            echo "Target directory is $TARGET_DIR. Removing any existing contents."
+            rm -rf "$TARGET_DIR"
+            
+            echo "Cloning repository $REPO_NAME into $TARGET_DIR"
+            git clone --depth 1 https://x-access-token:${GITHUB_TOKEN}@github.com/OperationSpark/${REPO_NAME}.git "$TARGET_DIR"
+            
+            echo "Cleaning up .git directories"
+            rm -rf "$TARGET_DIR/.git"
+            rm -rf "$TARGET_DIR/.github"
+          fi
+
+          if [ -n "$README_NAME" ]; then
+            echo "Fetching README.md for $REPO_NAME"
+            curl -H "Authorization: token ${GITHUB_TOKEN}" \
+                 -H "Accept: application/vnd.github.v3.raw" \
+                 -o "project-instructions/$README_NAME" \
+                 -L "https://api.github.com/repos/OperationSpark/${REPO_NAME}/contents/README.md"
+          fi
+
+      - name: Check for changes
+        run: |
+          echo "Checking for changes in the working directory..."
+          git status
+          git diff
+
+      - name: Commit and push changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Update from ${{ github.event.client_payload.repo }}"
+            git push
+          else
+            echo "No changes detected, skipping commit."
+          fi
